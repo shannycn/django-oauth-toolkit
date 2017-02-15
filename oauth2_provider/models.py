@@ -67,7 +67,7 @@ class AbstractApplication(models.Model):
     client_type = models.CharField(max_length=32, choices=CLIENT_TYPES)
     authorization_grant_type = models.CharField(max_length=32,
                                                 choices=GRANT_TYPES)
-    client_secret = models.CharField(max_length=255, blank=True,
+    client_secret = models.CharField(max_length=128, blank=True,
                                      default=generate_client_secret, db_index=True)
     name = models.CharField(max_length=255, blank=True)
     skip_authorization = models.BooleanField(default=False)
@@ -151,7 +151,7 @@ class Grant(models.Model):
     * :attr:`scope` Required scopes, optional
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    code = models.CharField(max_length=255, unique=True)  # code comes from oauthlib
+    code = models.CharField(max_length=128, unique=True)  # code comes from oauthlib
     application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL,
                                     on_delete=models.CASCADE)
     expires = models.DateTimeField()
@@ -190,7 +190,7 @@ class AccessToken(models.Model):
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
                              on_delete=models.CASCADE)
-    token = models.CharField(max_length=255, unique=True)
+    token = models.CharField(max_length=128, unique=True)
     application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL,
                                     on_delete=models.CASCADE)
     expires = models.DateTimeField()
@@ -260,7 +260,7 @@ class RefreshToken(models.Model):
                            bounded to
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    token = models.CharField(max_length=255, unique=True)
+    token = models.CharField(max_length=128, unique=True)
     application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL,
                                     on_delete=models.CASCADE)
     access_token = models.OneToOneField(AccessToken,
